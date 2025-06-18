@@ -11,6 +11,8 @@ import About from "./components/About";
 import { useState } from "react";
 import StudyMaterialHome from "./components/StudyMaterialHome";
 import { useState } from "react";
+import 'react-toastify/dist/ReactToastify.css'; 
+
 // import HomePage from "./components/HomePage";
 
 const App = () => {

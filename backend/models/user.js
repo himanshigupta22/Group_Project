@@ -1,17 +1,15 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-mongoose.connect('mongodb://127.0.0.1:27017/notebook')
-  .then(() => console.log('MongoDB connected'))
-  .catch((err) => console.error(err));
-
-const userSchema = new mongoose.Schema({
-    email: {
+const UserSchema = new Schema({
+    name: {
         type: String,
         required: true
     },
-    username: {
+    email: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     password: {
         type: String,
@@ -19,5 +17,5 @@ const userSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('user', userSchema)
-
+const UserModel = mongoose.model('users', UserSchema);
+module.exports = UserModel;

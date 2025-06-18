@@ -1,6 +1,5 @@
 import { Link } from "react-router";
-import SubjectCard from "./SubjectCard";
-import subjectData from "../utils/subjectData";
+
 const Body = () => {
   return (
     <div className="flex flex-col items-center justify-center flex-grow text-center px-4">
