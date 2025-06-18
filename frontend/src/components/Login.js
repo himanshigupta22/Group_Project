@@ -45,9 +45,12 @@ export default function Login() {
       })
       const result = await response.json();
       console.log(result);
-      const { success, message, error } = result;
+      // const { success, message, error } = result;
+      const { success, message, jwtToken, name, error } = result;
       if (success) {
         handleSuccess(message);
+        localStorage.setItem('token', jwtToken);
+        localStorage.setItem('loggedInUser', name);
         setTimeout(() => {
           navigate('/') // after this timeout redirect to logn
         }, 1000)
