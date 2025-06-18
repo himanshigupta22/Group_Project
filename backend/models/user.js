@@ -1,23 +1,23 @@
+ 
 const mongoose = require('mongoose');
+// const {Schema }= mongoose ;
+const Schema = mongoose.Schema;
 
-mongoose.connect('mongodb://127.0.0.1:27017/notebook')
-  .then(() => console.log('MongoDB connected'))
-  .catch((err) => console.error(err));
-
-const userSchema = new mongoose.Schema({
-    email: {
+const userSchema = new Schema({
+    name: {
         type: String,
         required: true
     },
-    username: {
+    email: {
         type: String,
+        unique:true,
         required: true
     },
     password: {
         type: String,
         required: true
     }
-})
+},{timestamps:true})
 
-module.exports = mongoose.model('user', userSchema)
-
+const userModel = mongoose.model('users', userSchema);
+module.exports = userModel;
