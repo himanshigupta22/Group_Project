@@ -1,4 +1,4 @@
-export default function AuthButton({ children, type = "button" }) {
+export default function AuthButton({ children, type = "submit" }) {
   return (
     <button
       type={type}
