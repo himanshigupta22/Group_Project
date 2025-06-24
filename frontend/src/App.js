@@ -12,6 +12,7 @@ import { useState } from "react";
 import StudyMaterialHome from "./components/StudyMaterialHome";
 import { useState } from "react";
 import 'react-toastify/dist/ReactToastify.css'; 
+import Profile from "./components/Profile";
 
 // import HomePage from "./components/HomePage";
 
@@ -25,6 +26,7 @@ const App = () => {
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/about" element={<About />} />
+          <Route path="/profile" element={<Profile />} />
           <Route
             path="/studyMaterial"
             element={<StudyMaterialHome notes={notes}></StudyMaterialHome>}
@@ -35,10 +37,7 @@ const App = () => {
           />
         </Routes>
       </div>
-    </BrowserRouter>
-    // <div>
-    //   <HomePage/>
-    // </div>
+    </BrowserRouter> 
   );
 };
 
