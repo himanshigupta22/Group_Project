@@ -3,6 +3,8 @@ import { useState } from "react";
 import { handleError, handleSuccess } from "../utils";
 import { ToastContainer } from "react-toastify";
 
+
+
 export default function Login() {
   const [loginInfo, setLoginInfo] = useState({
     email: "",
@@ -28,16 +30,18 @@ export default function Login() {
         body: JSON.stringify(loginInfo),
       });
       const result = await response.json();
-      const { success, jwtToken, name, message, error } = result;
+      const { success, token, name, message, error } = result;
 
       if (success) {
         handleSuccess(message);
-        localStorage.setItem("token", jwtToken);
+        // console.log(token)
+        localStorage.setItem("token", token);
         localStorage.setItem("loggedInUser", name);
 
         setTimeout(() => {
           navigate("/");
         }, 1000);
+
       } else if (error) {
         const details = error?.details[0].message;
         handleError(details);

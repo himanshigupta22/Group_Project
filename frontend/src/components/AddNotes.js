@@ -175,7 +175,7 @@ export default function AddNotes({ notes, setNotes }) {
             ))}
           </div>
         </div>
-           
+
       </div>
     </>
   );
