@@ -13,6 +13,7 @@
   "dependencies": {
     "@cloudinary/react": "^1.14.3",
     "@cloudinary/url-gen": "^1.21.0",
+    "@supabase/supabase-js": "^2.50.2",
     "@tailwindcss/postcss": "^4.1.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
@@ -24,6 +25,7 @@
     "toastify": "^2.0.1"
   },
   "devDependencies": {
+    "buffer": "^6.0.3",
     "parcel": "^2.14.4",
     "process": "^0.11.10"
   }

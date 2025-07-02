@@ -122,9 +122,17 @@ const Header = () => {
                   <Link
                     to="/profile"
                     className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                    onClick={() => setShowMenu(false)}
+                    onClick={() => setShowMenu(true)}
                   >
                     Profile
+                  </Link>
+
+                  <Link
+                    to="/allnotes"
+                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    onClick={() => setShowMenu(false)}
+                  >
+                    All Notes
                   </Link>
 
 

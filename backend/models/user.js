@@ -1,4 +1,4 @@
- 
+
 const mongoose = require('mongoose');
 // const {Schema }= mongoose ;
 const Schema = mongoose.Schema;
@@ -10,14 +10,51 @@ const userSchema = new Schema({
     },
     email: {
         type: String,
-        unique:true,
+        unique: true,
         required: true
     },
     password: {
         type: String,
         required: true
     }
-},{timestamps:true})
+}, { timestamps: true })
+
+const dataSchema = new Schema({
+    title: {
+        type: String,
+        required: true
+    },
+    code: {
+        type: String,
+        required: true
+    },
+    semester: {
+        type: String,
+        required: true
+    },
+    branch: {
+        type: String,
+        required: true
+    },
+    teacherName: {
+        type: String,
+        required: true
+    },
+    uploadedOn: {
+        type: String,
+        required: true
+    },
+    content: {
+        type: String,
+        required: true
+    },
+    url: {
+        type: String,
+        required: true
+    }
+})
+
 
 const userModel = mongoose.model('users', userSchema);
-module.exports = userModel;
+const fileModel = mongoose.model('fileData', dataSchema);
+module.exports ={ userModel,fileModel};

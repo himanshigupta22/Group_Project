@@ -9,16 +9,19 @@ const PORT = process.env.PORT || 4000;
 const bodyparser = require('body-parser')
 
 const AuthRouter = require('./Routes/AuthRouter')
-const ProductRouter = require('./Routes/ProductRouter')
+// const ProductRouter = require('./Routes/ProductRouter')
+const action=require('./Routes/Actions');
 
 app.get('/ping', (req, res) => {
     res.send("working")
 })
 
 app.use(bodyparser.json());
-app.use(cors())
-app.use('/auth', AuthRouter)
-app.use('/products', ProductRouter)
+app.use(cors());
+app.use('/auth', AuthRouter);
+// app.use('/products', ProductRouter)
+app.use('/action',action);
+
 
 app.listen(PORT, () => {
     console.log(" listning at  ", PORT)
