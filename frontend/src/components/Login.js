@@ -3,7 +3,7 @@ import { useState } from "react";
 import { handleError, handleSuccess } from "../utils";
 import { ToastContainer } from "react-toastify";
 
-
+const furl="http://localhost:8080/auth/login";
 
 export default function Login() {
   const [loginInfo, setLoginInfo] = useState({
@@ -21,7 +21,7 @@ export default function Login() {
     }
 
     try {
-      const url = "http://localhost:8080/auth/login";
+      const url = furl;
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -30,13 +30,16 @@ export default function Login() {
         body: JSON.stringify(loginInfo),
       });
       const result = await response.json();
-      const { success, token, name, message, error } = result;
+      const { success, token, name,message,error,id } = result;
+      console.log(id)
 
       if (success) {
         handleSuccess(message);
         // console.log(token)
         localStorage.setItem("token", token);
         localStorage.setItem("loggedInUser", name);
+        localStorage.setItem("id", id);
+        
 
         setTimeout(() => {
           navigate("/");

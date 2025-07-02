@@ -4,9 +4,9 @@
 import React, { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = '';
+const supabaseUrl = 'https://abkmbjrjfhaxncsfchcn.supabase.co';
 
-const supabaseKey = '';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFia21ianJqZmhheG5jc2ZjaGNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExODc5NzQsImV4cCI6MjA2Njc2Mzk3NH0.e7GP5hsmhWvY3ybkMg57sUZ64oZRtR6EZNI5jXBtdYQ';
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 

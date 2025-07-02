@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { useState } from "react";
 import Header from "./Header";
-
+{/*
 // export default function StudyMaterialHome({ notes }) {
 //   const [semesterFilter, setSemesterFilter] = useState("All");
 //   const [branchFilter, setBranchFilter] = useState("All");
@@ -171,11 +171,12 @@ import Header from "./Header";
 //             </p>
 //           )}
 //         </div>
-      
+
 //       </div>
 //     </>
 //   );
 // }
+
 
 
 
@@ -188,63 +189,73 @@ const StudyMaterialCards = () => {
   const [notesD, setnotesD] = useState([]);
 
   useEffect(() => {
+    // console.log(localStorage.getItem("id"))
+    // console.log("Calling backend...");
 
-      console.log("Calling backend...");
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url);
+        // console.log("Raw response:", response);
 
-      const fetchData = async () => {
-        try {
-          const response = await fetch(url);
-          console.log("Raw response:", response);
+        const data = await response.json();
+        // console.log("Parsed JSON:", data);
 
-          const data = await response.json();
-          console.log("Parsed JSON:", data);
+        setnotesD(data);
+      } catch (err) {
+        console.error("Fetch error:", err);
+      }
+    };
 
-          setnotesD(data);
-        } catch (err) {
-          console.error("Fetch error:", err);
-        }
-      };
+    fetchData();
+  }, []);
 
-      fetchData();
-    }, []);
+  if (!notesD || notesD.length === 0)
+    return (
 
-  if (!notesD || notesD.length === 0) return <div>Loading...</div>;
+      <h2>
+        Nothin to show
+      </h2>
+    )
 
   return (
     <>
-     <Header />
-    <div className="flex flex-wrap gap-4">
-      {notesD.map((note, index) => (
-        <div
-          key={index}
-          className= "bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 flex flex-col justify-between border border-gray-100 hover:scale-[1.02]"
-          style={{ height: "220px", width: "300px" }}
-        >
-          <div className="p-4 h-full flex flex-col justify-between">
-            <div>
-              <h2 className="text-2xl font-bold text-blue-800 mb-2">{note.title}</h2>
-              <p className="text-gray-600 text-sm line-clamp-2">{note.content}</p>
+      <Header />
+      <div className="flex flex-wrap gap-4">
+
+        {
+
+
+          notesD.map((note, index) => (
+            <div
+              key={index}
+              className="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 flex flex-col justify-between border border-gray-100 hover:scale-[1.02]"
+              style={{ height: "220px", width: "300px" }}
+            >
+              <div className="p-4 h-full flex flex-col justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold text-blue-800 mb-2">{note.title}</h2>
+                  <p className="text-gray-600 text-sm line-clamp-2">{note.content}</p>
+                </div>
+                <div className="mt-4 text-sm text-gray-700 pb-2 mb-2.5">
+                  <p><span className="font-semibold">Code:</span> {note.code}</p>
+                  <p><span className="font-semibold">Teacher:</span> {note.teacherName}</p>
+                  <p><span className="font-semibold">Uploaded On:</span> {note.uploadedOn}</p>
+                  {/* View PDF Button */}
+                  <a
+                    href={note.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 rounded-full font-medium hover:from-blue-600 hover:to-blue-800 transition"
+                  >
+                    📥 View PDF
+                  </a>
+
+                </div>
+              </div>
             </div>
-            <div className="mt-4 text-sm text-gray-700 pb-2 mb-2.5">
-              <p><span className="font-semibold">Code:</span> {note.code}</p>
-              <p><span className="font-semibold">Teacher:</span> {note.teacherName}</p>
-              <p><span className="font-semibold">Uploaded On:</span> {note.uploadedOn}</p>
-               {/* View PDF Button */}
-             <a
-                  href={note.url}
-                  target="_blank"
-                  rel="noreferrer"
-                 className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 rounded-full font-medium hover:from-blue-600 hover:to-blue-800 transition"
-                >
-                  📥 View PDF
-                </a>
-               
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  </>
+          ))}
+      </div>
+    </>
   );
 };
 

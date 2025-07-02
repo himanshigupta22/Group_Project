@@ -16,7 +16,9 @@ export default function AddNotes({ notes, setNotes }) {
   const [file, setFile] = useState(null);
   const [uploadedOn, setUploadedOn] = useState("");
   const [url, setUrl] = useState('');
-
+  const [id,setId]=useState('');
+  
+  
   const handleAddNote = async () => {
 
     if (!title || !content || !code || !branch || !semester || !teacherName || !file) {
@@ -34,8 +36,13 @@ export default function AddNotes({ notes, setNotes }) {
     //   uploadedOn,
     //   url
     // };
-    const currDate = new Date().toISOString();
+    const loggedId=localStorage.getItem("id")
+    setId(loggedId);
+    if(!loggedId) {
+      alert("Id not found");
+      return;}
 
+    const currDate = new Date().toISOString();
     const newurl = await PDFUploader(file);
 
     if (!newurl) {
@@ -52,6 +59,7 @@ export default function AddNotes({ notes, setNotes }) {
       teacherName,
       semester,
       branch,
+      id,
       uploadedOn: currDate,
       url: newurl,
     };
@@ -77,9 +85,10 @@ export default function AddNotes({ notes, setNotes }) {
         return;
       }
       setNotes([...notes, newNote]);
-      setUrl(uploadedUrl);
+      
       setUploadedOn(currDate);
 
+        console.log("uploaded")
       alert("File uploaded ");
 
       setTitle("");
@@ -93,7 +102,6 @@ export default function AddNotes({ notes, setNotes }) {
     } catch (err) {
       console.log(err);
     }
-
 
   }
   return (
@@ -197,7 +205,7 @@ export default function AddNotes({ notes, setNotes }) {
         </div>
 
         {/* Notes List */}
-        <div className="max-w-6xl mx-auto mt-12">
+        {/* <div className="max-w-6xl mx-auto mt-12">
           <h2 className="text-2xl font-bold text-gray-700 mb-6">Your Notes</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -225,14 +233,15 @@ export default function AddNotes({ notes, setNotes }) {
                   <strong>Uploaded On:</strong> {note.uploadedOn}
                 </p> */}
                 {/* <a href={notes.newurl}>Open the pdf</a> */}
-                <Link to={note.url}>Open </Link>
+                {/* <Link to={note.url}>Open </Link>
                 <p className="text-gray-700 mt-2">{note.content}</p>
               </div>
             ))}
           </div>
+        </div> 
+         */}
         </div>
-
-      </div>
+        
     </>
   );
 }
