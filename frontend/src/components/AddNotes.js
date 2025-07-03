@@ -1,49 +1,109 @@
 import { useState } from "react";
 import Header from "./Header";
+import PDFUploader from '../Utility/Utils'
+import { Link } from "react-router";
+
+const backend = "http://localhost:8080";
 
 export default function AddNotes({ notes, setNotes }) {
+
   const [title, setTitle] = useState("");
   const [code, setCode] = useState("");
   const [teacherName, setTeacherName] = useState("");
   const [semester, setSemester] = useState("");
   const [branch, setBranch] = useState("");
-  const [uploadedBy, setUploadedBy] = useState("");
   const [content, setContent] = useState("");
   const [file, setFile] = useState(null);
+  const [uploadedOn, setUploadedOn] = useState("");
+  const [url, setUrl] = useState('');
+  const [id,setId]=useState('');
+  
+  
+  const handleAddNote = async () => {
 
-  const handleAddNote = () => {
-    if (
-      title &&
-      content &&
-      code &&
-      branch &&
-      semester &&
-      teacherName &&
-      uploadedBy
-    ) {
-      const newNote = {
-        title,
-        content,
-        code,
-        teacherName,
-        uploadedBy,
-        semester,
-        branch,
-        file,
-      };
+    if (!title || !content || !code || !branch || !semester || !teacherName || !file) {
+      alert("Please fill in all fields and select a PDF file.");
+      return;
+    }
+
+    // const newNote = {
+    //   title,
+    //   content,
+    //   code,
+    //   teacherName,
+    //   semester,
+    //   branch,
+    //   uploadedOn,
+    //   url
+    // };
+    const loggedId=localStorage.getItem("id")
+    setId(loggedId);
+    if(!loggedId) {
+      alert("Id not found");
+      return;}
+
+    const currDate = new Date().toISOString();
+    const newurl = await PDFUploader(file);
+
+    if (!newurl) {
+      alert("Upload failed");
+      return;
+    }
+    setUrl(newurl);
+    setUploadedOn(currDate);
+
+    const newNote = {
+      title,
+      content,
+      code,
+      teacherName,
+      semester,
+      branch,
+      id,
+      uploadedOn: currDate,
+      url: newurl,
+    };
+
+
+    //send to backend
+
+    try {
+      const url = `${backend}/action/upload`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newNote),
+      });
+      const result = await response.json();
+      const { success, message, error } = result;
+
+
+      if (!success) {
+        alert(`Backend error: ${error || message || "Unknown error"}`);
+        return;
+      }
       setNotes([...notes, newNote]);
+      
+      setUploadedOn(currDate);
+
+        console.log("uploaded")
+      alert("File uploaded ");
 
       setTitle("");
       setContent("");
       setCode("");
       setBranch("");
       setSemester("");
-      setUploadedBy("");
+      setUploadedOn("");
       setTeacherName("");
       setFile(null);
+    } catch (err) {
+      console.log(err);
     }
-  };
 
+  }
   return (
     <>
       <Header />
@@ -105,13 +165,14 @@ export default function AddNotes({ notes, setNotes }) {
               onChange={(e) => setTeacherName(e.target.value)}
             />
 
-            <input
+            {/* <input
               type="text"
-              placeholder="Uploaded By"
+              placeholder="Uploaded On"
               className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              value={uploadedBy}
-              onChange={(e) => setUploadedBy(e.target.value)}
-            />
+              value={uploadedOn}
+              onChange={(e) => setUploadedOn(e.target.value)}
+            /> */}
+
           </div>
 
           <div className="mt-6">
@@ -142,8 +203,9 @@ export default function AddNotes({ notes, setNotes }) {
             </button>
           </div>
         </div>
+
         {/* Notes List */}
-        <div className="max-w-6xl mx-auto mt-12">
+        {/* <div className="max-w-6xl mx-auto mt-12">
           <h2 className="text-2xl font-bold text-gray-700 mb-6">Your Notes</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -167,16 +229,19 @@ export default function AddNotes({ notes, setNotes }) {
                 <p className="text-gray-600 mb-1">
                   <strong>Teacher:</strong> {note.teacherName}
                 </p>
-                <p className="text-gray-600 mb-1">
-                  <strong>Uploaded By:</strong> {note.uploadedBy}
-                </p>
+                {/* <p className="text-gray-600 mb-1">
+                  <strong>Uploaded On:</strong> {note.uploadedOn}
+                </p> */}
+                {/* <a href={notes.newurl}>Open the pdf</a> */}
+                {/* <Link to={note.url}>Open </Link>
                 <p className="text-gray-700 mt-2">{note.content}</p>
               </div>
             ))}
           </div>
+        </div> 
+         */}
         </div>
-           
-      </div>
+        
     </>
   );
 }
