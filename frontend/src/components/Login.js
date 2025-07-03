@@ -2,6 +2,7 @@ import { Link, Navigate, useNavigate } from "react-router";
 import { useState } from "react";
 import { handleError, handleSuccess } from "../utils";
 import { ToastContainer } from "react-toastify";
+import Header from './Header';
 
 const furl="http://localhost:8080/auth/login";
 
@@ -64,6 +65,8 @@ export default function Login() {
   };
 
   return (
+    <>
+    <Header/>
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="bg-white shadow-lg rounded-2xl w-full max-w-md p-8 min-h-[520px]">
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
@@ -141,5 +144,6 @@ export default function Login() {
 
       <ToastContainer />
     </div>
+    </>
   );
 }

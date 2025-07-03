@@ -6,6 +6,9 @@ import { ToastContainer } from "react-toastify";
 import Profile from "./Profile";
 import { FaUserCircle } from "react-icons/fa";   //profile
 
+// import { useNavigate } from "react-router-dom";
+
+
 const Header = () => {
   const [loggedInUser, setLoggedInUser] = useState("");
   const navigate = useNavigate();
@@ -31,15 +34,16 @@ const Header = () => {
 
   };
 
-  const ProfileMenu = (e) => {
-    if (loggedInUser) {
+  // const ProfileMenu = () => {
+  //   const userLoggedIn=localStorage.getItem("loggedInUser");
+  //   if (loggedInUser) {
 
-      <Profile />
-    }
-    else {
-      handleError("Please login Before loggin out")
-    }
-  }
+  //     <Profile user={{userLoggedIn}}/>
+  //   }
+  //   else {
+  //     handleError("Please login Before loggin out")
+  //   }
+  // }
 
   return (
     <header className="sticky top-0 z-50 bg-gradient-to-r from-blue-950 to-blue-700 shadow-md">
@@ -64,26 +68,6 @@ const Header = () => {
             About
           </Link>
 
-
-          {/* 
-          <Link
-            to="/login"
-            className="text-white text-lg font-semibold hover:text-yellow-400 transition"
-          >
-            Login
-          </Link>
-          <Link
-            to="/signup"
-            className="text-white text-lg font-semibold hover:text-yellow-400 transition"
-          >
-            Signup
-          </Link>
-
-          <Link
-            onClick={handleLogout}
-            className="text-white text-lg font-semibold hover:text-yellow-400 transition">
-            Logout
-          </Link> */}
           {/* Profile / auth menu */}
           <div className="relative">
             {/* Button / icon */}
@@ -91,7 +75,7 @@ const Header = () => {
               onClick={() => setShowMenu(!showMenu)}
               className="flex items-center gap-1 text-white text-lg font-semibold focus:outline-none"
             >
-              <FaUserCircle className="text-2xl" />
+              <FaUserCircle className="text-4xl" />
               {loggedInUser && (
                 <span className="hidden sm:inline">{loggedInUser}</span>
               )}
@@ -128,7 +112,7 @@ const Header = () => {
                   </Link>
 
                   <Link
-                    to="/allnotes"
+                    to="/studyMaterial"
                     className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                     onClick={() => setShowMenu(false)}
                   >
@@ -158,4 +142,5 @@ const Header = () => {
   );
 };
 
-export default Header;
+module.exports=Header;
+// export default Header;

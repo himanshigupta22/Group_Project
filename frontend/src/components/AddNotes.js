@@ -1,11 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "./Header";
 import PDFUploader from '../Utility/Utils'
 import { Link } from "react-router";
+import { BeatLoader, BounceLoader, ClipLoader, PuffLoader, RingLoader, MoonLoader } from "react-spinners";
+
+import { useNavigate } from "react-router";
+import { handleError } from "../utils";
 
 const backend = "http://localhost:8080";
 
 export default function AddNotes({ notes, setNotes }) {
+
+  const [uploadStatus, setUploadStatus] = useState(false);
 
   const [title, setTitle] = useState("");
   const [code, setCode] = useState("");
@@ -16,31 +22,39 @@ export default function AddNotes({ notes, setNotes }) {
   const [file, setFile] = useState(null);
   const [uploadedOn, setUploadedOn] = useState("");
   const [url, setUrl] = useState('');
-  const [id,setId]=useState('');
-  
-  
+  const [id, setId] = useState('');
+
+
+  const User = localStorage.getItem('loggedInUser');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!User) {
+      // alert("LOGIN");
+      handleError("LOGIN")
+      setTimeout(() => {
+        navigate("/login");
+      }, 100);
+    }
+  }, []);
+
+
+
   const handleAddNote = async () => {
+    setUploadStatus(true);
+
 
     if (!title || !content || !code || !branch || !semester || !teacherName || !file) {
       alert("Please fill in all fields and select a PDF file.");
       return;
     }
 
-    // const newNote = {
-    //   title,
-    //   content,
-    //   code,
-    //   teacherName,
-    //   semester,
-    //   branch,
-    //   uploadedOn,
-    //   url
-    // };
-    const loggedId=localStorage.getItem("id")
+    const loggedId = localStorage.getItem("id")
     setId(loggedId);
-    if(!loggedId) {
+    if (!loggedId) {
       alert("Id not found");
-      return;}
+      return;
+    }
 
     const currDate = new Date().toISOString();
     const newurl = await PDFUploader(file);
@@ -85,10 +99,10 @@ export default function AddNotes({ notes, setNotes }) {
         return;
       }
       setNotes([...notes, newNote]);
-      
+
       setUploadedOn(currDate);
 
-        console.log("uploaded")
+      console.log("uploaded")
       alert("File uploaded ");
 
       setTitle("");
@@ -101,6 +115,8 @@ export default function AddNotes({ notes, setNotes }) {
       setFile(null);
     } catch (err) {
       console.log(err);
+    } finally {
+      setUploadStatus(false);
     }
 
   }
@@ -203,9 +219,9 @@ export default function AddNotes({ notes, setNotes }) {
             </button>
           </div>
         </div>
-
-        {/* Notes List */}
-        {/* <div className="max-w-6xl mx-auto mt-12">
+        <>
+          {/* Notes List */}
+          {/* <div className="max-w-6xl mx-auto mt-12">
           <h2 className="text-2xl font-bold text-gray-700 mb-6">Your Notes</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -232,16 +248,17 @@ export default function AddNotes({ notes, setNotes }) {
                 {/* <p className="text-gray-600 mb-1">
                   <strong>Uploaded On:</strong> {note.uploadedOn}
                 </p> */}
-                {/* <a href={notes.newurl}>Open the pdf</a> */}
-                {/* <Link to={note.url}>Open </Link>
+          {/* <a href={notes.newurl}>Open the pdf</a> */}
+          {/* <Link to={note.url}>Open </Link>
                 <p className="text-gray-700 mt-2">{note.content}</p>
               </div>
             ))}
           </div>
         </div> 
-         */}
-        </div>
-        
+        */}
+        </>
+      </div>
+
     </>
   );
 }
