@@ -1,264 +1,226 @@
 import { useEffect, useState } from "react";
 import Header from "./Header";
 import PDFUploader from '../Utility/Utils'
-import { Link } from "react-router";
+// import { Link } from "react-router";
 import { BeatLoader, BounceLoader, ClipLoader, PuffLoader, RingLoader, MoonLoader } from "react-spinners";
+import { useNavigate } from "react-router"; 
 
-import { useNavigate } from "react-router";
-import { handleError } from "../utils";
 
-const backend = "http://localhost:8080";
+// Import custom components and utilities
+import Header from "./Header";
+import PDFUploader from '../Utility/Utils';
+import { handleError, handleSuccess } from "../utils";
+
+// It's best practice to store URLs in environment variables
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8080";
+
+// Define an initial state for the form to easily reset it
+const initialFormState = {
+  title: "",
+  code: "",
+  teacherName: "",
+  semester: "",
+  branch: "",
+  content: "",
+};
+
+// Define semester options for the dropdown to avoid repetition
+const semesterOptions = [
+  "1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th"
+];
 
 export default function AddNotes({ notes, setNotes }) {
-
-  const [uploadStatus, setUploadStatus] = useState(false);
-
-  const [title, setTitle] = useState("");
-  const [code, setCode] = useState("");
-  const [teacherName, setTeacherName] = useState("");
-  const [semester, setSemester] = useState("");
-  const [branch, setBranch] = useState("");
-  const [content, setContent] = useState("");
+  // Consolidated state for form data, the selected file, and loading status
+  const [formData, setFormData] = useState(initialFormState);
   const [file, setFile] = useState(null);
-  const [uploadedOn, setUploadedOn] = useState("");
-  const [url, setUrl] = useState('');
-  const [id, setId] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
 
-
-  const User = localStorage.getItem('loggedInUser');
   const navigate = useNavigate();
 
+  // Effect to check for user authentication on component mount
   useEffect(() => {
-    if (!User) {
-      // alert("LOGIN");
-      handleError("LOGIN")
-      setTimeout(() => {
-        navigate("/login");
-      }, 100);
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    if (!loggedInUser) {
+      handleError("Please log in to add notes.");
+      setTimeout(() => navigate("/login"), 1000);
     }
-  }, []);
+  }, [navigate]); // Add navigate to dependency array
 
+  // Generic handler for all text and select input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
+  // Handler for file input changes
+  const handleFileChange = (e) => {
+    if (e.target.files.length > 0) {
+      setFile(e.target.files[0]);
+    }
+  };
 
+  // Handler for form submission
   const handleAddNote = async () => {
-    setUploadStatus(true);
-
-
+    // Validate that all fields and a file are provided
+    const { title, content, code, branch, semester, teacherName } = formData;
     if (!title || !content || !code || !branch || !semester || !teacherName || !file) {
-      alert("Please fill in all fields and select a PDF file.");
+      handleError("Please fill in all fields and select a PDF file.");
       return;
     }
 
-    const loggedId = localStorage.getItem("id")
-    setId(loggedId);
-    if (!loggedId) {
-      alert("Id not found");
+    const userId = localStorage.getItem("id");
+    if (!userId) {
+      handleError("User ID not found. Please log in again.");
       return;
     }
-
-    const currDate = new Date().toISOString();
-    const newurl = await PDFUploader(file);
-
-    if (!newurl) {
-      alert("Upload failed");
-      return;
-    }
-    setUrl(newurl);
-    setUploadedOn(currDate);
-
-    const newNote = {
-      title,
-      content,
-      code,
-      teacherName,
-      semester,
-      branch,
-      id,
-      uploadedOn: currDate,
-      url: newurl,
-    };
-
-
-    //send to backend
+    
+    setIsUploading(true);
 
     try {
-      const url = `${backend}/action/upload`;
-      const response = await fetch(url, {
+      // 1. Upload the PDF and get its URL
+      const fileUrl = await PDFUploader(file);
+      if (!fileUrl) {
+        throw new Error("PDF upload failed. Please try again.");
+      }
+      // 2. Prepare the new note object with all necessary data
+      const newNote = {
+        ...formData,
+        id: userId,
+        uploadedOn: new Date().toISOString(),
+        url: fileUrl,
+      };
+
+      // 3. Send the note data to the backend API
+      const response = await fetch(`${BACKEND_URL}/action/upload`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newNote),
       });
+
       const result = await response.json();
-      const { success, message, error } = result;
-
-
-      if (!success) {
-        alert(`Backend error: ${error || message || "Unknown error"}`);
-        return;
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || result.message || "Failed to save the note.");
       }
+
+      // 4. Update parent state, show success, and reset the form
       setNotes([...notes, newNote]);
-
-      setUploadedOn(currDate);
-
-      console.log("uploaded")
-      alert("File uploaded ");
-
-      setTitle("");
-      setContent("");
-      setCode("");
-      setBranch("");
-      setSemester("");
-      setUploadedOn("");
-      setTeacherName("");
+      handleSuccess("Note added successfully!", "success"); // Assuming handleError can show success messages
+      setFormData(initialFormState);
       setFile(null);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setUploadStatus(false);
-    }
+      document.getElementById('file-input').value = null; // Reset file input
 
-  }
+    } catch (err) {
+      console.error("Error adding note:", err);
+      handleError(err.message || "An unexpected error occurred.");
+    } finally {
+      setIsUploading(false); // Ensure loading state is always turned off
+    }
+  };
+
   return (
     <>
       <Header />
       <div className="min-h-screen bg-gradient-to-r from-blue-50 to-purple-100 py-10 px-4">
-        <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8">
+        <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8 relative">
           <h1 className="text-3xl font-bold text-center text-blue-800 mb-8">
             Add a New Note
           </h1>
-
-          {/* Form */}
+          
+          {/* Form Overlay for Loading State */}
+          {isUploading && (
+            <div className="absolute inset-0 bg-white bg-opacity-75 flex justify-center items-center rounded-lg z-10">
+              <ClipLoader color="#3B82F6" size={80} />
+            </div>
+          )}
+          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <input
+              name="title"
               type="text"
               placeholder="Title"
-              className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:bg-gray-100"
+              value={formData.title}
+              onChange={handleInputChange}
+              disabled={isUploading}
             />
-
             <input
+              name="code"
               type="text"
-              placeholder="Code"
-              className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
+              placeholder="Subject Code"
+              className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:bg-gray-100"
+              value={formData.code}
+              onChange={handleInputChange}
+              disabled={isUploading}
             />
-
             <select
-              className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              value={semester}
-              onChange={(e) => setSemester(e.target.value)}
+              name="semester"
+              className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:bg-gray-100"
+              value={formData.semester}
+              onChange={handleInputChange}
+              disabled={isUploading}
             >
-              <option value="" placeholder="Select Semester">
-                Select Semester
-              </option>
-              <option value="1st">1st Semester</option>
-              <option value="2nd">2nd Semester</option>
-              <option value="3rd">3rd Semester</option>
-              <option value="4th">4th Semester</option>
-              <option value="5th">5th Semester</option>
-              <option value="6th">6th Semester</option>
-              <option value="7th">7th Semester</option>
-              <option value="8th">8th Semester</option>
+              <option value="">Select Semester</option>
+              {semesterOptions.map((sem) => (
+                <option key={sem} value={sem}>{sem} Semester</option>
+              ))}
             </select>
-
             <input
+              name="branch"
               type="text"
               placeholder="Branch"
-              className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              value={branch}
-              onChange={(e) => setBranch(e.target.value)}
+              className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:bg-gray-100"
+              value={formData.branch}
+              onChange={handleInputChange}
+              disabled={isUploading}
             />
-
             <input
+              name="teacherName"
               type="text"
-              placeholder="Teacher Name"
-              className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              value={teacherName}
-              onChange={(e) => setTeacherName(e.target.value)}
+              placeholder="Teacher's Name"
+              className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 md:col-span-2 disabled:bg-gray-100"
+              value={formData.teacherName}
+              onChange={handleInputChange}
+              disabled={isUploading}
             />
-
-            {/* <input
-              type="text"
-              placeholder="Uploaded On"
-              className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              value={uploadedOn}
-              onChange={(e) => setUploadedOn(e.target.value)}
-            /> */}
-
           </div>
 
           <div className="mt-6">
             <textarea
-              placeholder="Content"
+              name="content"
+              placeholder="Brief description or content..."
               rows="4"
-              className="w-full border border-gray-300 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 resize-none"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
+              className="w-full border border-gray-300 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 resize-none disabled:bg-gray-100"
+              value={formData.content}
+              onChange={handleInputChange}
+              disabled={isUploading}
             />
           </div>
 
           <div className="mt-4">
             <input
+              id="file-input"
               type="file"
               accept="application/pdf"
-              className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
-              onChange={(e) => setFile(e.target.files[0])}
+              className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 disabled:opacity-50"
+              onChange={handleFileChange}
+              disabled={isUploading}
             />
           </div>
 
           <div className="flex justify-center mt-6">
             <button
               onClick={handleAddNote}
-              className="bg-gradient-to-r from-blue-700 to-purple-700 text-white px-8 py-3 rounded-full text-lg hover:opacity-90 transition"
+              className="bg-gradient-to-r from-blue-700 to-purple-700 text-white px-8 py-3 rounded-full text-lg hover:opacity-90 transition disabled:opacity-60 disabled:cursor-not-allowed"
+              disabled={isUploading}
             >
-              Add Note
+              {isUploading ? "Uploading..." : "Add Note"}
             </button>
           </div>
         </div>
-        <>
-          {/* Notes List */}
-          {/* <div className="max-w-6xl mx-auto mt-12">
-          <h2 className="text-2xl font-bold text-gray-700 mb-6">Your Notes</h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {notes.map((note, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-xl shadow-md hover:shadow-xl p-6 transition"
-              >
-                <h3 className="text-xl font-bold text-blue-700 mb-2">
-                  {note.title}
-                </h3>
-                <p className="text-gray-600 mb-1">
-                  <strong>Code:</strong> {note.code}
-                </p>
-                <p className="text-gray-600 mb-1">
-                  <strong>Semester:</strong> {note.semester}
-                </p>
-                <p className="text-gray-600 mb-1">
-                  <strong>Branch:</strong> {note.branch}
-                </p>
-                <p className="text-gray-600 mb-1">
-                  <strong>Teacher:</strong> {note.teacherName}
-                </p>
-                {/* <p className="text-gray-600 mb-1">
-                  <strong>Uploaded On:</strong> {note.uploadedOn}
-                </p> */}
-          {/* <a href={notes.newurl}>Open the pdf</a> */}
-          {/* <Link to={note.url}>Open </Link>
-                <p className="text-gray-700 mt-2">{note.content}</p>
-              </div>
-            ))}
-          </div>
-        </div> 
-        */}
-        </>
       </div>
-
     </>
   );
 }
