@@ -72,6 +72,7 @@ export default function AddNotes({ notes, setNotes }) {
     }
 
     const userId = localStorage.getItem("id");
+    const loggedUSer=localStorage.getItem("loggedInUser")
     if (!userId) {
       handleError("User ID not found. Please log in again.");
       return;
@@ -170,7 +171,7 @@ export default function AddNotes({ notes, setNotes }) {
             <input
               name="branch"
               type="text"
-              placeholder="Branch"
+              placeholdecoder="Branch"
               className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:bg-gray-100"
               value={formData.branch}
               onChange={handleInputChange}
@@ -185,6 +186,7 @@ export default function AddNotes({ notes, setNotes }) {
               onChange={handleInputChange}
               disabled={isUploading}
             />
+
           </div>
 
           <div className="mt-6">

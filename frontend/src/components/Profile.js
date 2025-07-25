@@ -1,30 +1,54 @@
+import React, { useEffect, useState } from "react";
+import axiosClient from "../Utility/axiosClient";
 
-import React, { useEffect } from "react";
-import Header from './Header'
+const UserProfile = () => {
 
-export default function Profile({ user }) {
-
-    // useEffect(()=>{
-    //     const fetchData = async () => {
-    //     }
-    // },[])
-    console.log(user)
+   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
 
-    return (
-        <>
-            <Header />
-            <div className="p-4 bg-white shadow rounded max-w-md mx-auto mb-6">
-                <h2 className="text-xl font-bold mb-4">👤 User Information</h2>
-                <div className="space-y-2">
-                    <p><strong>Name:</strong> { }</p>
-                    <p><strong>Email:</strong> { }</p>
-                    <p><strong>Username:</strong> { }</p>
-                    {/* Add more fields as needed */}
-                </div>
-            </div>
-        </>
-    );
-}
+ console.log(user)
+  useEffect(() => {
 
-// export default Profile;
+    console.log("Calling backend...for data");
+
+    const fetchData = async () => {
+      try {
+ 
+        const userId = localStorage.getItem('id');
+        const response = await fetch(`http://localhost:8080/auth/user`, {
+          method: 'POST', // or 'GET' depending on your API
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}` // if using JWT
+          },
+          body: JSON.stringify({ userId }) // if using POST
+        });
+        const data = await response.json();
+        
+        setUser(data.data);
+       
+        
+      } catch (err) {
+        console.log("Fetch error:", err);
+      }
+
+    };
+
+    fetchData();
+  }, []);
+
+
+
+  return (
+    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-2xl shadow-lg">
+      <h2 className="text-2xl font-bold mb-4 text-gray-800">{user?.name}</h2>
+      <h2 className="text-2xl font-bold mb-4 text-gray-800">{user?.email}</h2>
+      
+
+    </div>
+  );
+};
+
+export default UserProfile;
