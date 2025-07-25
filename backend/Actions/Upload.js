@@ -1,6 +1,5 @@
 const {fileModel} = require("../models/user"); 
 
-
 const Upload = async (req, res) => {
     try {
         // const { email } = req.body;

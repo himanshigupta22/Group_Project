@@ -56,4 +56,17 @@ const login = async (req, res) => {
     }
 }
 
-module.exports = { signup, login }
+const data = async(req,res)=>{
+    try{
+    const {userId}=req.body;
+    const data = await userModel.findById(userId);
+    console.log(data);
+    res.status(200).json({
+        data
+    });
+    }catch(err){
+        res.send(err);
+    }
+}
+
+module.exports = { signup, login,data }
