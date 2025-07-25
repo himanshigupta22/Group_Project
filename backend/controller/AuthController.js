@@ -44,10 +44,10 @@ const login = async (req, res) => {
             process.env.JWT_Secret,
             { expiresIn: '2h' }
         );
-        console.log(token)
+        // console.log(token)
 
         // res.status(201).json({ message: "login success", success: true })
-        res.status(201).json({ message: "login success", success: true, name: user.name, email, token })
+        res.status(201).json({ message: "login success", success: true, name: user.name, email, token ,id:user._id})
 
 
 
