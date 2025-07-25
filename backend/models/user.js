@@ -51,6 +51,10 @@ const dataSchema = new Schema({
     url: {
         type: String,
         required: true
+    },
+    id:{
+        type:String,
+        required:true
     }
 })
 

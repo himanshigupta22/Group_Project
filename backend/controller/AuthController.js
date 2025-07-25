@@ -44,10 +44,10 @@ const login = async (req, res) => {
             process.env.JWT_Secret,
             { expiresIn: '2h' }
         );
-        console.log(token)
+        // console.log(token)
 
         // res.status(201).json({ message: "login success", success: true })
-        res.status(201).json({ message: "login success", success: true, name: user.name, email, token })
+        res.status(201).json({ message: "login success", success: true, name: user.name, email, token ,id:user._id})
 
 
 
@@ -56,4 +56,17 @@ const login = async (req, res) => {
     }
 }
 
-module.exports = { signup, login }
+const data = async(req,res)=>{
+    try{
+    const {userId}=req.body;
+    const data = await userModel.findById(userId);
+    console.log(data);
+    res.status(200).json({
+        data
+    });
+    }catch(err){
+        res.send(err);
+    }
+}
+
+module.exports = { signup, login,data }
