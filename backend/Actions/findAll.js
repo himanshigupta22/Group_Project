@@ -11,4 +11,6 @@ const findData = async (req, res) => {
     }
 }
 
+
+
 module.exports = findData;
