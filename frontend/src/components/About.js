@@ -1,139 +1,118 @@
 import Header from "./Header";
+
 const About = () => {
   return (
     <>
       <Header />
-      <div className="p-10  ">
-        <div className="p-10 flex justify-cente mt-2 flex-col    justify-center align-center">
-          {/* About notes */}
-          <h2 className="flex justify-center text-5xl sec">About MyNoteBook</h2>
-          <h3 className="flex justify-center mt-4">
+      <div className="p-6 md:p-10 bg-gray-50 min-h-screen">
+        {/* Intro Section */}
+        <section className="max-w-5xl mx-auto text-center mb-10">
+          <h2 className="text-4xl md:text-5xl font-bold text-blue-700">
+            About NoteStack
+          </h2>
+          <h3 className="mt-4 text-lg md:text-xl italic text-gray-700">
             "Notes that Connect, Knowledge that Empowers."
           </h3>
-          <p className="flex justify-center border  mt-3  bg-blue-100 p-3 rounded-full ">
-            The Place fueled by the deep desire of introvert students or those
-            having trouble asking for help, or those who want to share their
-            knowledge to all those in need To exel in Academics.
+          <p className="mt-4 bg-blue-100 text-gray-800 rounded-full py-3 px-6 inline-block max-w-2xl mx-auto">
+            Built for students who prefer quiet learning, need help but hesitate
+            to ask, or love sharing knowledge. NoteStack is a space where
+            everyone can thrive academically through collaboration.
           </p>
-        </div>
-        <div className="sec mt-3 max-w-4xl mx-auto p-6 bg-white rounded-2xl shadow-md flex flex-col items-center space-x-6">
-          {/* What is this project all about */}
-          <h2 className="mb-3 text-3xl">📚 What is My NoteBook?</h2>
-          <p>
-            My NoteBook is a student-driven platform built to help learners
-            upload, discover, and share academic notes with ease. Whether you're
-            preparing for exams, catching up on missed classes, or simply
-            looking for different perspectives — My NoteBook empowers you with
-            peer-contributed resources at your fingertips.
-          </p>
-        </div>
-        <div>
-          <div className=" sec mt-3 border max-w-4xl mx-auto p-6 bg-white rounded-2xl shadow-md flex flex-col items-center space-x-6">
-            {/* What are we tryning to do */}
-            <h2 className="mb-3 text-2xl">What We Are Trying To Do</h2>
-            <p>
-              We are trying to bridge the gap between students by creating a
-              central hub for notes and study resources. Our aim is to encourage
-              peer-to-peer learning, where students can help each other by
-              sharing their insights, summaries, and lecture notes. We believe
-              that learning is better together, and by building this platform,
-              we hope to make education more accessible, supportive, and
-              community-driven.
-            </p>
-          </div>
-          <div className="sec mt-3 max-w-4xl mx-auto p-6 bg-white rounded-2xl shadow-md flex flex-col items-center space-x-6">
-            <h2 className="mb-3 text-2xl">🌟 Our Mission</h2>
-            <p>
-              Our mission is to make educational resources easily accessible and
-              shareable across all colleges. We believe that knowledge grows
-              when it's shared, and through collaboration, we aim to make
-              learning more inclusive, supportive, and efficient for everyone.
-            </p>
-          </div>
-          <div className="sec mt-3 max-w-4xl border mx-auto p-6 bg-white rounded-2xl shadow-md flex space-x-6 ">
-            <div>
-              <h2>🚀 Key Features</h2>
-              <p>
-                ✅ Upload and download academic notes easily<br></br>✅ Browse
-                notes by course, subject, and semester<br></br>✅ Like, comment,
-                and engage with fellow students<br></br>✅ Clean,
-                distraction-free interface focused on learning<br></br>
-              </p>
-            </div>
+        </section>
 
-            <div>
-              <h2>💡 Our Unique Approach</h2>
-              <p>
-                ✔️ Free, simple, and fast platform designed for students
-                <br></br>
-                ✔️ Peer-verified notes and admin-reviewed content<br></br>
-                ✔️ Fully responsive and mobile-friendly experience<br></br>
-                ✔️ Built by students, for students — we know what you need!
-                <br></br>
-              </p>
-            </div>
+        {/* What is NoteStack */}
+        <section className="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-md mb-8">
+          <h2 className="text-3xl font-semibold text-blue-700 mb-4">
+            📚 What is NoteStack?
+          </h2>
+          <p className="text-gray-700 leading-relaxed">
+            NoteStack is a student-powered platform to upload, discover, and
+            share academic notes effortlessly. Whether you're preparing for
+            exams, reviewing missed classes, or exploring new topics — NoteStack
+            provides peer-contributed content tailored for student needs.
+          </p>
+        </section>
+
+        {/* Vision */}
+        <section className="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-md mb-8">
+          <h2 className="text-2xl font-semibold text-blue-700 mb-4">
+            🎯 Our Vision
+          </h2>
+          <p className="text-gray-700 leading-relaxed">
+            We're building a bridge between students by creating a central hub
+            for sharing notes and learning materials. Our goal is to foster a
+            peer-to-peer learning culture where collaboration helps everyone
+            succeed.
+          </p>
+        </section>
+
+        {/* Mission */}
+        <section className="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-md mb-8">
+          <h2 className="text-2xl font-semibold text-blue-700 mb-4">
+            🌟 Our Mission
+          </h2>
+          <p className="text-gray-700 leading-relaxed">
+            To make academic resources accessible and shareable across
+            institutions. We believe knowledge grows when shared — and NoteStack
+            is built to make learning more inclusive, efficient, and
+            student-centered.
+          </p>
+        </section>
+
+        {/* Features + Unique Approach */}
+        <section className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="bg-white p-6 rounded-2xl shadow-md">
+            <h3 className="text-xl font-semibold text-blue-700 mb-3">
+              🚀 Key Features
+            </h3>
+            <ul className="list-disc pl-5 text-gray-700 space-y-2">
+              <li>Upload and download academic notes with ease</li>
+              <li>Browse by course, subject, and semester</li>
+              <li>Like, comment, and engage with peers</li>
+              <li>Clean, distraction-free interface</li>
+            </ul>
           </div>
-          <div className="sec mt-2 max-w-4xl mx-auto p-6 bg-white rounded-2xl shadow-md flex flex-col items-center space-x-6">
-            <h2>👥 Who is My NoteBook For?</h2>
-            <p>
-              College Students: Across all years and academic streams Busy
-              Learners: Who need quick access to high-quality notes
-              Contributors: Who love sharing their knowledge and helping others
-              Knowledge Seekers: Looking for verified, well-organized study{" "}
-            </p>
+          <div className="bg-white p-6 rounded-2xl shadow-md">
+            <h3 className="text-xl font-semibold text-blue-700 mb-3">
+              💡 Our Unique Approach
+            </h3>
+            <ul className="list-disc pl-5 text-gray-700 space-y-2">
+              <li>Free, fast, and student-first platform</li>
+              <li>Peer-reviewed notes with admin moderation</li>
+              <li>Mobile-friendly and fully responsive</li>
+              <li>Built by students, for students</li>
+            </ul>
           </div>
-          <div>{/* Team */}</div>
-          <div className="max-w-4xl mx-auto ">
-            <section id="team" className="mt-3">
-              <h2>Our Team</h2>
-              <div className="team-container flex ">
-                <div className="sec team-member  m-3 p-2 border bg-amber-200  max-h-70">
-                  <img
-                    src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                    alt="Team Member 1"
-                    style={{ height: "40%" }}
-                  />
-                  <h3 className="mt-4">John Doe</h3>
-                  <p>CEO & Founder</p>
-                  <p>
-                    John is the visionary behind our company. He ensures
-                    everything runs smoothly and leads the team with passion and
-                    dedication.
-                  </p>
-                </div>
-                <div className="sec team-member  m-3 p-2 border bg-amber-200  max-h-70">
-                  <img
-                    src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                    alt="Team Member 1"
-                    style={{ height: "40%" }}
-                  />
-                  <h3 className="mt-4">Jane Smith</h3>
-                  <p>Lead Developer</p>
-                  <p>
-                    Jane is responsible for overseeing the development team and
-                    making key technical decisions for our projects.
-                  </p>
-                </div>
-                <div className="sec team-member  m-3 p-2 border bg-amber-200  max-h-70">
-                  <img
-                    src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                    alt="Team Member 1"
-                    style={{ height: "40%" }}
-                  />
-                  <h3 className="mt-4">Mike Johnson</h3>
-                  <p>Marketing Manager</p>
-                  <p>
-                    Mike ensures our brand gets the attention it deserves by
-                    leading our marketing efforts and reaching the right
-                    audience.
-                  </p>
-                </div>
-              </div>
-            </section>
-          </div>
-        </div>
+        </section>
+
+        {/* Who it's for */}
+        <section className="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-md mb-10">
+          <h2 className="text-xl font-semibold text-blue-700 mb-4">
+            👥 Who Is It For?
+          </h2>
+          <ul className="list-disc pl-5 text-gray-700 space-y-2">
+            <li>
+              <strong>College Students:</strong> Across all years and
+              disciplines
+            </li>
+            <li>
+              <strong>Busy Learners:</strong> Seeking quick, reliable notes
+            </li>
+            <li>
+              <strong>Knowledge Sharers:</strong> Who love to contribute and
+              help others
+            </li>
+            <li>
+              <strong>Academic Explorers:</strong> Looking for verified
+              resources
+            </li>
+          </ul>
+        </section>
+
+       
       </div>
     </>
   );
 };
+
 export default About;

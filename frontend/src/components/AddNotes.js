@@ -73,12 +73,15 @@ export default function AddNotes({ notes, setNotes }) {
 
     const userId = localStorage.getItem("id");
     const loggedUSer=localStorage.getItem("loggedInUser")
+    console.log(loggedUSer)
     if (!userId) {
       handleError("User ID not found. Please log in again.");
       return;
     }
     
     setIsUploading(true);
+;
+    
 
     try {
       // 1. Upload the PDF and get its URL
@@ -92,6 +95,7 @@ export default function AddNotes({ notes, setNotes }) {
         id: userId,
         uploadedOn: new Date().toISOString(),
         url: fileUrl,
+        uploadedby:loggedUSer
       };
 
       // 3. Send the note data to the backend API
