@@ -55,6 +55,9 @@ const dataSchema = new Schema({
     id:{
         type:String,
         required:true
+    },
+    uploadedBy:{
+        type:String,
     }
 })
 

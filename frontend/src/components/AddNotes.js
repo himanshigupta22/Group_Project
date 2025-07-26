@@ -1,15 +1,7 @@
 import { useEffect, useState } from "react";
 import Header from "./Header";
-import PDFUploader from '../Utility/Utils'
-// import { Link } from "react-router";
-import { BeatLoader, BounceLoader, ClipLoader, PuffLoader, RingLoader, MoonLoader } from "react-spinners";
-import { useNavigate } from "react-router"; 
-
-
-// Import custom components and utilities
-import Header from "./Header";
 import PDFUploader from '../Utility/Utils';
-import { handleError, handleSuccess } from "../utils";
+import { useNavigate } from "react-router"; 
 
 // It's best practice to store URLs in environment variables
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8080";
@@ -41,10 +33,10 @@ export default function AddNotes({ notes, setNotes }) {
   useEffect(() => {
     const loggedInUser = localStorage.getItem('loggedInUser');
     if (!loggedInUser) {
-      handleError("Please log in to add notes.");
+      alert("Please log in to add notes.");
       setTimeout(() => navigate("/login"), 1000);
     }
-  }, [navigate]); // Add navigate to dependency array
+  }, [navigate]);
 
   // Generic handler for all text and select input changes
   const handleInputChange = (e) => {
@@ -67,21 +59,19 @@ export default function AddNotes({ notes, setNotes }) {
     // Validate that all fields and a file are provided
     const { title, content, code, branch, semester, teacherName } = formData;
     if (!title || !content || !code || !branch || !semester || !teacherName || !file) {
-      handleError("Please fill in all fields and select a PDF file.");
+      alert("Please fill in all fields and select a PDF file.");
       return;
     }
 
     const userId = localStorage.getItem("id");
-    const loggedUSer=localStorage.getItem("loggedInUser")
-    console.log(loggedUSer)
+    const loggedUser = localStorage.getItem("loggedInUser");
+    console.log(loggedUser);
     if (!userId) {
-      handleError("User ID not found. Please log in again.");
+      alert("User ID not found. Please log in again.");
       return;
     }
     
     setIsUploading(true);
-;
-    
 
     try {
       // 1. Upload the PDF and get its URL
@@ -89,13 +79,14 @@ export default function AddNotes({ notes, setNotes }) {
       if (!fileUrl) {
         throw new Error("PDF upload failed. Please try again.");
       }
+      
       // 2. Prepare the new note object with all necessary data
       const newNote = {
         ...formData,
         id: userId,
         uploadedOn: new Date().toISOString(),
         url: fileUrl,
-        uploadedby:loggedUSer
+        uploadedBy: loggedUser
       };
 
       // 3. Send the note data to the backend API
@@ -112,16 +103,16 @@ export default function AddNotes({ notes, setNotes }) {
 
       // 4. Update parent state, show success, and reset the form
       setNotes([...notes, newNote]);
-      handleSuccess("Note added successfully!", "success"); // Assuming handleError can show success messages
+      alert("Note added successfully!");
       setFormData(initialFormState);
       setFile(null);
       document.getElementById('file-input').value = null; // Reset file input
 
     } catch (err) {
       console.error("Error adding note:", err);
-      handleError(err.message || "An unexpected error occurred.");
+      alert(err.message || "An unexpected error occurred.");
     } finally {
-      setIsUploading(false); // Ensure loading state is always turned off
+      setIsUploading(false);
     }
   };
 
@@ -137,7 +128,7 @@ export default function AddNotes({ notes, setNotes }) {
           {/* Form Overlay for Loading State */}
           {isUploading && (
             <div className="absolute inset-0 bg-white bg-opacity-75 flex justify-center items-center rounded-lg z-10">
-              <ClipLoader color="#3B82F6" size={80} />
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
             </div>
           )}
           
@@ -175,7 +166,7 @@ export default function AddNotes({ notes, setNotes }) {
             <input
               name="branch"
               type="text"
-              placeholdecoder="Branch"
+              placeholder="Branch"
               className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:bg-gray-100"
               value={formData.branch}
               onChange={handleInputChange}
@@ -190,7 +181,6 @@ export default function AddNotes({ notes, setNotes }) {
               onChange={handleInputChange}
               disabled={isUploading}
             />
-
           </div>
 
           <div className="mt-6">
