@@ -8,10 +8,7 @@ const cors = require('cors')
 const PORT = process.env.PORT || 4000;
 const bodyparser = require('body-parser')
 
-
-
-const AuthRouter = require('./Routes/AuthRouter')
-// const ProductRouter = require('./Routes/ProductRouter')
+const AuthRouter = require('./Routes/AuthRouter') 
 const action=require('./Routes/Actions');
 
 app.get('/ping', (req, res) => {
@@ -27,8 +24,7 @@ app.use(cors({
 }));
 
 
-app.use('/auth', AuthRouter);
-// app.use('/products', ProductRouter)
+app.use('/auth', AuthRouter); 
 app.use('/action',action);
 
 

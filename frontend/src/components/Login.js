@@ -4,6 +4,7 @@ import { handleError, handleSuccess } from "../utils";
 import { ToastContainer } from "react-toastify";
 import Header from './Header';
 
+
 const furl="http://localhost:8080/auth/login";
 
 export default function Login() {
@@ -32,11 +33,10 @@ export default function Login() {
       });
       const result = await response.json();
       const { success, token, name,message,error,id } = result;
-      console.log(id)
+       
 
       if (success) {
-        handleSuccess(message);
-        // console.log(token)
+        handleSuccess(message); 
         localStorage.setItem("token", token);
         localStorage.setItem("loggedInUser", name);
         localStorage.setItem("id", id);
