@@ -1,12 +1,7 @@
-<<<<<<< HEAD
 import React, { useEffect, useState } from "react";
 import Header from './Header';
 import { FaUser, FaEnvelope, FaPhone, FaCalendarAlt, FaEdit } from "react-icons/fa";
 import { handleError, handleResponse } from "../utils"; 
-=======
-import React, { useEffect, useState } from "react"; 
-import Header from './Header';
->>>>>>> 8109266e54ee62c525bcd63720f27de6f49a6ace
 
 const UserP = () => {
   const backlink = `http://localhost:8080/auth/user`;
@@ -120,8 +115,7 @@ const UserP = () => {
         </div>
       </div>
     </div>
-    
-   </>
+     
   );
 };
 
